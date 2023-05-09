@@ -6,6 +6,5 @@ How to start
 	Set config
 		Update kafka host based on environment
 		`export MONGO_URL=</Put snitch credentials here>`
-
 	Run script
 		`node main.js`	
