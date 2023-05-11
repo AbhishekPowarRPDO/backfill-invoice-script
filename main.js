@@ -58,19 +58,7 @@ function createRssoEvent(cssoRecord) {
     return rssoEvent;
 }
 
-async function fetchDocumentsFromDateRange(startDate, endDate, limit, cursor) {
-    let mongoURL = mongoConfig.mongoURL
-    if (!mongoConfig.useMongoURL){
-        mongoURL = `mongodb://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}?authSource=users&directConnection=true`;
-    }
-    console.log({
-        mongoURL
-    })
-    let conn = await MongoClient.connect(mongoURL,{
-        connectTimeoutMS: 5000,
-        serverSelectionTimeoutMS: 5000,
-        readPreference: 'secondaryPreferred',
-    })
+async function fetchDocumentsFromDateRange(startDate, endDate, limit, cursor, conn) {
     let dbo = conn.db("users")
     let cssoModel = dbo.collection("captainSubServiceOnboarding")
     
@@ -119,10 +107,22 @@ async function processDocuments(startDate, endDate, limit) {
     console.log('Method entry: processDocuments', { startDate, endDate, limit });
     let cursor = lastCursor;
     let masterCount = 0;
+    let mongoURL = mongoConfig.mongoURL
+    if (!mongoConfig.useMongoURL){
+        mongoURL = `mongodb://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}?authSource=users&directConnection=true`;
+    }
+    console.log({
+        mongoURL
+    })
+    let conn = await MongoClient.connect(mongoURL,{
+        connectTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 5000,
+        readPreference: 'secondaryPreferred',
+    })
     try {
         while (true) {
             let localCount = 0;
-            const documents = await fetchDocumentsFromDateRange(startDate, endDate, limit, cursor);
+            const documents = await fetchDocumentsFromDateRange(startDate, endDate, limit, cursor,conn);
             for (const document of documents) {
                 console.log('---\nProcessing document init:', {
                     id: document._id,
