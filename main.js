@@ -35,8 +35,8 @@ function createRssoEvent(cssoRecord) {
         eventType: "joiningFee",
         joiningFee: {
             payment: {
-                correlationID: transactionProgressObj?.correlationId,
-                paymentID: transactionProgressObj?.paymentId,
+                correlationId: transactionProgressObj?.correlationId,
+                paymentId: transactionProgressObj?.paymentId,
                 failureReason: transactionProgressObj?.failureReason,
                 status: transactionProgressObj?.status,
                 amount: {
@@ -47,8 +47,8 @@ function createRssoEvent(cssoRecord) {
             },
         },
         "_id": cssoRecord._id || new ObjectId().toHexString(),
-        riderID: cssoRecord?.userId,
-        cityID: cssoRecord?.cityId,
+        riderId: cssoRecord?.userId,
+        cityId: cssoRecord?.cityId,
         subServiceType: cssoRecord?.subServiceType,
         serviceType: cssoRecord?.serviceType,
         createdOn: transactionProgressObj?.createdOn,
